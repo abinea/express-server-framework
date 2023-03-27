@@ -2,6 +2,7 @@
 import { Router } from "express"
 import type { Request, Response } from "express"
 import shopService, { ShopService } from "../services/shop"
+import { createShopFormSchema } from "../moulds/ShopForm"
 
 interface ShopQuery {
 	pageIndex: number
@@ -48,6 +49,14 @@ class ShopController {
 	put: ControllerMethod = async (req, res) => {
 		const { shopId } = req.params
 		const { name } = req.query
+		console.log(req.params, req.query)
+		try {
+			await createShopFormSchema().validate({ name })
+		} catch (e) {
+			res.status(400).send({ success: false, message: e.message })
+			return
+		}
+
 		const shopInfo = await this.shopService.modify({
 			id: shopId,
 			values: { name },
