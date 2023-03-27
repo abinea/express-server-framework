@@ -1,15 +1,18 @@
-// src/controllers/shop.js
 import { Router } from "express"
 import type { Request, Response } from "express"
 import shopService, { ShopService } from "../services/shop"
 import { createShopFormSchema } from "../moulds/ShopForm"
+import bodyParser from "body-parser"
 
 interface ShopQuery {
 	pageIndex: number
 	pageSize: number
 }
 
-type ControllerMethod = (req: Request, res: Response) => Promise<void>
+type API<Params = {}, Body = {}, Query = {}, Res = unknown> = (
+	req: Request<Params, {}, Body, Query>,
+	res: Res & Omit<Response, "body">
+) => Promise<void>
 
 class ShopController {
 	shopService: ShopService
@@ -21,10 +24,11 @@ class ShopController {
 		router.get("/:shopId", this.getOne)
 		router.put("/:shopId", this.put)
 		router.delete("/:shopId", this.delete)
+		router.post("/", bodyParser.urlencoded({ extended: false }), this.post)
 		return router
 	}
 
-	getAll = async (req: Request & { query: ShopQuery }, res: Response) => {
+	getAll: API<{}, {}, ShopQuery> = async (req, res) => {
 		const { pageIndex, pageSize } = req.query
 		const shopList = await this.shopService.find({
 			id: undefined,
@@ -35,7 +39,7 @@ class ShopController {
 		res.send({ success: true, data: shopList })
 	}
 
-	getOne: ControllerMethod = async (req, res) => {
+	getOne: API<{ shopId: string }> = async (req, res) => {
 		const { shopId } = req.params
 		const shopList = await this.shopService.find({ id: shopId })
 
@@ -46,7 +50,7 @@ class ShopController {
 		}
 	}
 
-	put: ControllerMethod = async (req, res) => {
+	put: API<{ shopId: string }, {}, { name: string }> = async (req, res) => {
 		const { shopId } = req.params
 		const { name } = req.query
 		console.log(req.params, req.query)
@@ -69,7 +73,7 @@ class ShopController {
 		}
 	}
 
-	delete: ControllerMethod = async (req, res) => {
+	delete: API<{ shopId: string }> = async (req, res) => {
 		const { shopId } = req.params
 		const success = await this.shopService.remove({ id: shopId })
 
@@ -77,6 +81,18 @@ class ShopController {
 			res.status(404)
 		}
 		res.send({ success })
+	}
+
+	post: API<{}, { name: string }> = async (req, res) => {
+		const { name } = req.body
+		try {
+			await createShopFormSchema().validate({ name })
+		} catch (e) {
+			res.status(400).send({ success: false, message: e.message })
+			return
+		}
+		const shopInfo = await this.shopService.create({ values: { name } })
+		res.send({ success: true, data: shopInfo })
 	}
 }
 
