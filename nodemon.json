@@ -3,5 +3,6 @@
 	"watch": ["src"],
 	"ignore_watch": ["node_modules", "src/public"],
 	"exec": "tsx src/server.ts",
-	"ext": "ts json js"
+	"ext": "ts json js",
+	"delay": 800
 }

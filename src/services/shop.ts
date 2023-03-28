@@ -1,3 +1,15 @@
+import {
+	CreateArgs,
+	CreateResult,
+	FindArgs,
+	FindResult,
+	ModifyArgs,
+	ModifyResult,
+	RemoveArgs,
+	RemoveResult,
+	ServiceAPI,
+} from "../types/"
+
 type Shop = {
 	name: string
 }
@@ -24,7 +36,11 @@ export class ShopService {
 		await delay()
 	}
 
-	async find({ id, pageIndex = 0, pageSize = 10 }) {
+	find: ServiceAPI<FindArgs, FindResult<Shop>> = async ({
+		id,
+		pageIndex = 0,
+		pageSize = 10,
+	}) => {
 		await delay()
 		if (id) {
 			return [memoryStorage[id]].filter(Boolean)
@@ -34,7 +50,10 @@ export class ShopService {
 			.map((id) => ({ id, ...memoryStorage[id] }))
 	}
 
-	async modify({ id, values }) {
+	modify: ServiceAPI<ModifyArgs<Shop>, ModifyResult<Shop>> = async ({
+		id,
+		values,
+	}) => {
 		await delay()
 		const target = memoryStorage[id]
 		if (!target) {
@@ -43,7 +62,7 @@ export class ShopService {
 		return Object.assign(target, values)
 	}
 
-	async remove({ id }) {
+	remove: ServiceAPI<RemoveArgs, RemoveResult> = async ({ id }) => {
 		await delay()
 		const target = memoryStorage[id]
 		if (!target) {
@@ -51,7 +70,9 @@ export class ShopService {
 		}
 		return delete memoryStorage[id]
 	}
-	async create({ values }) {
+	create: ServiceAPI<CreateArgs<Shop>, CreateResult<Shop>> = async ({
+		values,
+	}) => {
 		await delay()
 		const id = String(
 			1 +

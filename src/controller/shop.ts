@@ -1,7 +1,8 @@
 import { Router } from "express"
-import type { Request, Response } from "express"
 import shopService, { ShopService } from "../services/shop"
 import { createShopFormSchema } from "../moulds/ShopForm"
+import { ControllerAPI } from "../types/controller"
+import cc from "../utils/cc"
 import bodyParser from "body-parser"
 
 interface ShopQuery {
@@ -9,26 +10,25 @@ interface ShopQuery {
 	pageSize: number
 }
 
-type API<Params = {}, Body = {}, Query = {}, Res = unknown> = (
-	req: Request<Params, {}, Body, Query>,
-	res: Res & Omit<Response, "body">
-) => Promise<void>
-
 class ShopController {
-	shopService: ShopService
+	shopService = {} as ShopService
 
 	async init(): Promise<Router> {
 		this.shopService = await shopService()
 		const router = Router()
-		router.get("/", this.getAll)
-		router.get("/:shopId", this.getOne)
-		router.put("/:shopId", this.put)
-		router.delete("/:shopId", this.delete)
-		router.post("/", bodyParser.urlencoded({ extended: false }), this.post)
+		router.get("/", cc(this.getAll))
+		router.get("/:shopId", cc(this.getOne))
+		router.put("/:shopId", cc(this.put))
+		router.delete("/:shopId", cc(this.delete))
+		router.post(
+			"/",
+			bodyParser.urlencoded({ extended: false }),
+			cc(this.post)
+		)
 		return router
 	}
 
-	getAll: API<{}, {}, ShopQuery> = async (req, res) => {
+	getAll: ControllerAPI<{}, {}, ShopQuery> = async (req, res) => {
 		const { pageIndex, pageSize } = req.query
 		const shopList = await this.shopService.find({
 			id: undefined,
@@ -39,7 +39,7 @@ class ShopController {
 		res.send({ success: true, data: shopList })
 	}
 
-	getOne: API<{ shopId: string }> = async (req, res) => {
+	getOne: ControllerAPI<{ shopId: string }> = async (req, res) => {
 		const { shopId } = req.params
 		const shopList = await this.shopService.find({ id: shopId })
 
@@ -50,13 +50,16 @@ class ShopController {
 		}
 	}
 
-	put: API<{ shopId: string }, {}, { name: string }> = async (req, res) => {
+	put: ControllerAPI<{ shopId: string }, {}, { name: string }> = async (
+		req,
+		res
+	) => {
 		const { shopId } = req.params
 		const { name } = req.query
 		console.log(req.params, req.query)
 		try {
 			await createShopFormSchema().validate({ name })
-		} catch (e) {
+		} catch (e: any) {
 			res.status(400).send({ success: false, message: e.message })
 			return
 		}
@@ -73,7 +76,7 @@ class ShopController {
 		}
 	}
 
-	delete: API<{ shopId: string }> = async (req, res) => {
+	delete: ControllerAPI<{ shopId: string }> = async (req, res) => {
 		const { shopId } = req.params
 		const success = await this.shopService.remove({ id: shopId })
 
@@ -83,11 +86,11 @@ class ShopController {
 		res.send({ success })
 	}
 
-	post: API<{}, { name: string }> = async (req, res) => {
+	post: ControllerAPI<{}, { name: string }> = async (req, res) => {
 		const { name } = req.body
 		try {
 			await createShopFormSchema().validate({ name })
-		} catch (e) {
+		} catch (e: any) {
 			res.status(400).send({ success: false, message: e.message })
 			return
 		}
@@ -96,9 +99,7 @@ class ShopController {
 	}
 }
 
-async function shopController() {
+export default async () => {
 	const c = new ShopController()
 	return await c.init()
 }
-
-export default shopController
