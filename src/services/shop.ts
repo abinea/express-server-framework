@@ -8,91 +8,58 @@ import {
 	RemoveArgs,
 	RemoveResult,
 	ServiceAPI,
-} from "../types/"
-
-type Shop = {
-	name: string
-}
-
-type MemoryStorage = {
-	[key: string]: Shop
-}
-
-// 店铺数据
-const memoryStorage: MemoryStorage = {
-	"1001": { name: "良品铺子" },
-	"1002": { name: "来伊份" },
-	"1003": { name: "三只松鼠" },
-	"1004": { name: "百草味" },
-}
-
-// 模拟延时
-async function delay(ms = 200) {
-	await new Promise((r) => setTimeout(r, ms))
-}
+} from "../types/service"
+import { ShopModel } from "../types/model"
+import db from "../models"
 
 export class ShopService {
-	async init() {
-		await delay()
-	}
+	async init() {}
 
-	find: ServiceAPI<FindArgs, FindResult<Shop>> = async ({
+	find: ServiceAPI<FindArgs, FindResult<ShopModel>> = async ({
 		id,
 		pageIndex = 0,
 		pageSize = 10,
 	}) => {
-		await delay()
 		if (id) {
-			return [memoryStorage[id]].filter(Boolean)
+			return [await db.Shop.findByPk(id)]
 		}
-		return Object.keys(memoryStorage)
-			.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
-			.map((id) => ({ id, ...memoryStorage[id] }))
+		return await db.Shop.findAll({
+			offset: pageIndex * pageSize,
+			limit: pageSize,
+		})
 	}
 
-	modify: ServiceAPI<ModifyArgs<Shop>, ModifyResult<Shop>> = async ({
-		id,
-		values,
-	}) => {
-		await delay()
-		const target = memoryStorage[id]
-		if (!target) {
-			return null
+	modify: ServiceAPI<ModifyArgs<ShopModel>, ModifyResult<ShopModel>> =
+		async ({ id, values }) => {
+			const target = await db.Shop.findByPk(id)
+			if (!target) {
+				return null
+			}
+			Object.assign(target, values)
+			return await target.save()
 		}
-		return Object.assign(target, values)
-	}
 
 	remove: ServiceAPI<RemoveArgs, RemoveResult> = async ({ id }) => {
-		await delay()
-		const target = memoryStorage[id]
+		const target = await db.Shop.findByPk(id)
 		if (!target) {
 			return false
 		}
-		return delete memoryStorage[id]
+		return target.destroy()
 	}
-	create: ServiceAPI<CreateArgs<Shop>, CreateResult<Shop>> = async ({
-		values,
-	}) => {
-		await delay()
-		const id = String(
-			1 +
-				Object.keys(memoryStorage).reduce(
-					(m, id) => Math.max(m, Number(id)),
-					-Infinity
-				)
-		)
-		return { id, ...(memoryStorage[id] = values) }
-	}
+	create: ServiceAPI<CreateArgs<ShopModel>, CreateResult<ShopModel>> =
+		async ({ values }) => {
+			const created = db.Shop.create(values)
+			console.log(created)
+			return await db.Shop.create(values)
+		}
 }
 
 // 单例模式
 let service: ShopService | null = null
-async function shopService(): Promise<ShopService> {
+export default async function () {
 	if (!service) {
 		service = new ShopService()
 		await service.init()
 	}
 	return service
 }
-
-export default shopService

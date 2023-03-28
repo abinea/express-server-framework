@@ -11,15 +11,13 @@ export interface RemoveArgs {
 	id: string
 }
 export interface CreateArgs<Data> {
-	values: Data
+	values: Partial<Data>
 }
 
-export type FindResult<Data> = Array<Data>
+export type FindResult<Data> = Array<Data | null>
 export type ModifyResult<Data> = Data | null
-export type RemoveResult = boolean
-export type CreateResult<Data> = {
-	id: string
-} & Data
+export type RemoveResult = boolean | void
+export type CreateResult<Data> = Data
 
 export type ServiceAPI<Args = unknown, Res = unknown> = (
 	args: Args
