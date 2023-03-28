@@ -4,7 +4,7 @@ const { resolve } = require("path")
 const modelsDir = resolve("src/models")
 
 module.exports = {
-	config: `${modelsDir}/config.js`,
+	config: `${modelsDir}/config.json`,
 	"migrations-path": `${modelsDir}/migrate`,
 	"seeders-path": `${modelsDir}/seed`,
 	"models-path": modelsDir,

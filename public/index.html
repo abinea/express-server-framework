@@ -1,11 +1,25 @@
-<html lang="en">
+<html>
 	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Node server template</title>
+		<meta charset="utf-8" />
+		<style>
+			.error {
+				color: red;
+				font-size: 14px;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>it works!</h1>
+		<div id="root"></div>
+
+		<script type="module">
+			import "./gule.js"
+			import { refreshShopList, bindShopInfoEvents } from "./index.js"
+
+			async function bootstrap() {
+				await refreshShopList()
+				await bindShopInfoEvents()
+			}
+			bootstrap()
+		</script>
 	</body>
 </html>

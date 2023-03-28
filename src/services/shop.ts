@@ -48,8 +48,6 @@ export class ShopService {
 	}
 	create: ServiceAPI<CreateArgs<ShopModel>, CreateResult<ShopModel>> =
 		async ({ values }) => {
-			const created = db.Shop.create(values)
-			console.log(created)
 			return await db.Shop.create(values)
 		}
 }

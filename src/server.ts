@@ -8,12 +8,14 @@ import initControllers from "./controller"
 
 const server: Application = express()
 const publicDir = resolve("public")
+const mouldsDir = resolve("src/moulds")
 
 const PORT = parseInt(process.env.PORT as string) || 9000
 
 async function bootstrap() {
-	server.use(express.static(publicDir))
 	server.use(await initMiddlewares())
+	server.use(express.static(publicDir))
+	server.use("/moulds", express.static(mouldsDir))
 	server.use(await initControllers())
 	server.use(errorHandler)
 	await promisify(server.listen.bind(server, PORT))()
