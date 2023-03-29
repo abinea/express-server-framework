@@ -1,6 +1,15 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<!-- 测试 Content-Security-Policy -->
+		<!-- <meta
+			http-equiv="Content-Security-Policy"
+			content="script-src 'nonce-d41d8cd98f00b204e9800998ecf8427e';"
+		/> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>在线店铺</title>
 		<style>
 			.error {
 				color: red;
@@ -10,16 +19,25 @@
 	</head>
 	<body>
 		<div id="root"></div>
-
-		<script type="module">
-			import "./gule.js"
-			import { refreshShopList, bindShopInfoEvents } from "./index.js"
-
-			async function bootstrap() {
-				await refreshShopList()
-				await bindShopInfoEvents()
-			}
-			bootstrap()
-		</script>
 	</body>
+	<!-- 测试 Content-Security-Policy -->
+	<script type="module" nonce="d41d8cd98f00b204e9800998ecf8427e">
+		import "./gule.js"
+		import { refreshShopList, bindShopInfoEvents } from "./index.js"
+
+		// // jsonp测试，无法突破 Content-Security-Policy
+		// let oScript = document.createElement("script")
+		// oScript.src = "/api/csrf/script"
+		// document.body.appendChild(oScript)
+
+		async function bootstrap() {
+			await refreshShopList()
+			await bindShopInfoEvents()
+		}
+		bootstrap()
+	</script>
+	<script
+		src="/api/csrf/script"
+		nonce="b83c6f08d133077bcb793130a0cd4deb"
+	></script>
 </html>

@@ -23,11 +23,13 @@ class LoginController {
 	}
 
 	post: Handler = (req, res) => {
+		// @ts-ignore
 		req.session.logined = true
 		res.redirect(this.homepagePath)
 	}
 
 	getGithubCallback: Handler = (req, res) => {
+		// @ts-ignore
 		req.session.logined = true
 		res.redirect(this.homepagePath)
 	}

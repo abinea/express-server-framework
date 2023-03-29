@@ -2,7 +2,7 @@ import session from "express-session"
 import sessionSequelize from "connect-session-sequelize"
 import db from "../models"
 
-export default function sessionMiddleware(secret) {
+export default function sessionMiddleware(secret: string) {
 	const SequelizeStore = sessionSequelize(session.Store)
 
 	const store = new SequelizeStore({

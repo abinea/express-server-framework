@@ -8,7 +8,8 @@ export async function refreshShopList() {
 		({ id, name }) => `
     <li data-shop-id="${id}">
       <div data-type="text">${name}</div>
-      <input type="text" placeholder="输入新的店铺名称" />
+			<label for="shop-${id}"></label>
+      <input id="shop-${id}" type="text" placeholder="输入新的店铺名称" />
       <a href="#" data-type="modify">确认修改</a>
       <a href="#" data-type="remove">删除店铺</a>
       <div class="error"></div>
@@ -19,8 +20,8 @@ export async function refreshShopList() {
     <ul class="shop-list">${htmlItems.join("")}</ul>
     <h1>店铺新增：</h1>
     <form method="post" action="/api/shop">
-      <label>新店铺的名称：</label>
-      <input type="text" name="name" />
+      <label for="createShop">新店铺的名称：</label>
+      <input id="createShop" type="text" name="name" />
       <button type="submit" data-type="create">确认新增</button>
       <span class="error"></span>
     </form>`
@@ -56,13 +57,21 @@ export async function modifyShopInfo(e) {
 
 	await fetch(`/api/shop/${shopId}?name=${encodeURIComponent(name)}`, {
 		method: "PUT",
+		headers: {
+			"Csrf-Token": __CSRF_TOKEN__,
+		},
 	})
 	await refreshShopList()
 }
 
 export async function removeShopInfo(e) {
 	const shopId = e.target.parentElement.dataset.shopId
-	const res = await fetch(`/api/shop/${shopId}`, { method: "DELETE" })
+	const res = await fetch(`/api/shop/${shopId}`, {
+		method: "DELETE",
+		headers: {
+			"Csrf-Token": __CSRF_TOKEN__,
+		},
+	})
 	await refreshShopList()
 }
 
@@ -81,6 +90,7 @@ export async function createShopInfo(e) {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
+			"Csrf-Token": __CSRF_TOKEN__,
 		},
 		body: `name=${encodeURIComponent(name)}`,
 	})

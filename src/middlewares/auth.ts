@@ -1,5 +1,6 @@
 import passport from "passport"
 import { Strategy as GithubStrategy } from "passport-github"
+// auth.json 为自定义配置文件，故不上传
 import auth from "./auth.json"
 
 const GITHUB_STRATEGY_OPTIONS = auth["github"]

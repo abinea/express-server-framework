@@ -3,6 +3,7 @@ import shopService, { ShopService } from "../services/shop"
 import { createShopFormSchema } from "../moulds/ShopForm"
 import { ControllerAPI } from "../types/controller"
 import cc from "../utils/cc"
+import escapeHtmlInObject from "../utils/escape-html-in-object"
 import bodyParser from "body-parser"
 
 interface ShopQuery {
@@ -35,8 +36,7 @@ class ShopController {
 			pageIndex,
 			pageSize,
 		})
-
-		res.send({ success: true, data: shopList })
+		res.send(escapeHtmlInObject({ success: true, data: shopList }))
 	}
 
 	getOne: ControllerAPI<{ shopId: string }> = async (req, res) => {
@@ -44,7 +44,7 @@ class ShopController {
 		const shopList = await this.shopService.find({ id: shopId })
 
 		if (shopList.length) {
-			res.send({ success: true, data: shopList[0] })
+			res.send(escapeHtmlInObject({ success: true, data: shopList[0] }))
 		} else {
 			res.status(404).send({ success: false, data: null })
 		}
@@ -70,7 +70,7 @@ class ShopController {
 		})
 
 		if (shopInfo) {
-			res.send({ success: true, data: shopInfo })
+			res.send(escapeHtmlInObject({ success: true, data: shopInfo }))
 		} else {
 			res.status(404).send({ success: false, data: null })
 		}
@@ -95,7 +95,7 @@ class ShopController {
 			return
 		}
 		const shopInfo = await this.shopService.create({ values: { name } })
-		res.send({ success: true, data: shopInfo })
+		res.send(escapeHtmlInObject({ success: true, data: shopInfo }))
 	}
 }
 

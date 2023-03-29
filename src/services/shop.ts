@@ -1,4 +1,4 @@
-import {
+import type {
 	CreateArgs,
 	CreateResult,
 	FindArgs,
@@ -9,7 +9,7 @@ import {
 	RemoveResult,
 	ServiceAPI,
 } from "../types/service"
-import { ShopModel } from "../types/model"
+import type { ShopModel } from "../types/model"
 import db from "../models"
 
 export class ShopService {
