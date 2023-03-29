@@ -2,7 +2,7 @@
 	"restartable": "rs",
 	"watch": ["src"],
 	"ignore_watch": ["node_modules", "src/public"],
-	"exec": "tsx -r ./scripts/env src/server.ts",
+	"exec": "tsx -r ./scripts/env src/server.ts | bunyan -o short -l info",
 	"ext": "ts json js",
 	"delay": 800
 }

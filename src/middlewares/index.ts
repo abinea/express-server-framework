@@ -1,18 +1,20 @@
 import { Router } from "express"
+import bodyParser from "body-parser"
+import csurf from "csurf"
+import helmet from "helmet"
+import config from "../config"
 import urlnormalizeMiddleware from "./urlnormalize"
 import cookieParser from "cookie-parser"
 import sessionMiddleware from "./session"
 import loginMiddleware from "./login"
 import authMiddleware from "./auth"
-import bodyParser from "body-parser"
-import csurf from "csurf"
-import helmet from "helmet"
-import config from "../config"
+import traceMiddleware from "./trace"
 
 // const secret = "d41d8cd98f00b204e9800998ecf8427ea378d269"
 
 export default async function initMiddlewares() {
 	const router = Router()
+	router.use(traceMiddleware())
 	// 通过 HTTP 响应头来控制安全策略
 	router.use(
 		helmet(),

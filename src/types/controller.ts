@@ -6,3 +6,11 @@ export type ControllerAPI<Params = {}, Body = {}, Query = {}, Res = any> = (
 ) => Promise<void>
 
 export type Handler = (req: Request, res: Response, next: NextFunction) => void
+
+export interface TokenIndexer {
+	[key: string]: (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => string | undefined | null
+}

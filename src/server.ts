@@ -7,6 +7,7 @@ import process from "node:process"
 import express from "express"
 import initMiddlewares from "./middlewares"
 import initControllers from "./controller"
+import logger from "./utils/logger"
 
 const server: Application = express()
 const publicDir = resolve("public")
@@ -25,8 +26,14 @@ async function bootstrap() {
 	server.use(errorHandler)
 
 	await promisify(server.listen.bind(server, port))()
-	console.log(`> start server on port ${port}`)
+	logger.info(`> start server on port ${port}`)
 }
+
+// 监听未捕获的 Promise 异常，直接退出进程
+process.on("unhandledRejection", (err) => {
+	logger.fatal("unhandledRejection", err)
+	process.exit(1)
+})
 
 const errorHandler = (
 	err: Error,
@@ -37,14 +44,8 @@ const errorHandler = (
 	if (res.headersSent) {
 		return next(err)
 	}
-	console.log("出现异常：", err)
+	req.logger.error(err)
 	res.redirect("/500.html")
 }
-
-// 监听未捕获的 Promise 异常，直接退出进程
-process.on("unhandledRejection", (err) => {
-	console.error("unhandledRejection", err)
-	process.exit(1)
-})
 
 bootstrap()

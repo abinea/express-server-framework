@@ -31,18 +31,20 @@ class ShopController {
 	}
 
 	getAll: ControllerAPI<{}, {}, ShopQuery> = async (req, res) => {
+		const { logging } = req
 		const { pageIndex, pageSize } = req.query
 		const shopList = await this.shopService.find({
-			id: undefined,
 			pageIndex,
 			pageSize,
+			logging,
 		})
 		res.send(escapeHtmlInObject({ success: true, data: shopList }))
 	}
 
 	getOne: ControllerAPI<{ shopId: string }> = async (req, res) => {
+		const { logging } = req
 		const { shopId } = req.params
-		const shopList = await this.shopService.find({ id: shopId })
+		const shopList = await this.shopService.find({ id: shopId, logging })
 
 		if (shopList.length) {
 			res.send(escapeHtmlInObject({ success: true, data: shopList[0] }))
@@ -55,6 +57,7 @@ class ShopController {
 		req,
 		res
 	) => {
+		const { logging } = req
 		const { shopId } = req.params
 		const { name } = req.query
 		console.log(req.params, req.query)
@@ -68,6 +71,7 @@ class ShopController {
 		const shopInfo = await this.shopService.modify({
 			id: shopId,
 			values: { name },
+			logging,
 		})
 
 		if (shopInfo) {
@@ -78,8 +82,9 @@ class ShopController {
 	}
 
 	delete: ControllerAPI<{ shopId: string }> = async (req, res) => {
+		const { logging } = req
 		const { shopId } = req.params
-		const success = await this.shopService.remove({ id: shopId })
+		const success = await this.shopService.remove({ id: shopId, logging })
 
 		if (!success) {
 			res.status(404)
@@ -88,6 +93,7 @@ class ShopController {
 	}
 
 	post: ControllerAPI<{}, { name: string }> = async (req, res) => {
+		const { logging } = req
 		const { name } = req.body
 		try {
 			await createShopFormSchema().validate({ name })
@@ -95,7 +101,10 @@ class ShopController {
 			res.status(400).send({ success: false, message: e.message })
 			return
 		}
-		const shopInfo = await this.shopService.create({ values: { name } })
+		const shopInfo = await this.shopService.create({
+			values: { name },
+			logging,
+		})
 		res.send(escapeHtmlInObject({ success: true, data: shopInfo }))
 	}
 }

@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename)
 const basename = path.basename(__filename)
 const dbConfig = config.db as any
 const sequelize = dbConfig.url
-	? new Sequelize.Sequelize(dbConfig.url, config)
+	? new Sequelize.Sequelize(dbConfig.url, dbConfig)
 	: new Sequelize.Sequelize(
 			dbConfig.database,
 			dbConfig.username,

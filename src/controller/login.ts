@@ -3,9 +3,7 @@ import { Router } from "express"
 import { passport } from "../middlewares/auth"
 import config from "../config"
 
-const homepagePath = config.homepagePath
-const loginPath = config.loginPath
-
+const { homepagePath, loginPath } = config
 class LoginController {
 	async init() {
 		const router = Router()
@@ -25,7 +23,6 @@ class LoginController {
 	}
 
 	post: Handler = (req, res) => {
-		// @ts-ignore
 		req.session.logined = true
 		res.redirect(homepagePath)
 	}
