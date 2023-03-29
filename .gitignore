@@ -4,8 +4,5 @@ node_modules
 build
 dist
 
-
-# auth passport
-src/middlewares/auth.json
-
 *lock*
+.env*

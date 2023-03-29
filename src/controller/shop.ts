@@ -1,10 +1,11 @@
+import type { ControllerAPI } from "../types/controller"
+import type { ShopService } from "../services/shop"
+import shopService from "../services/shop"
 import { Router } from "express"
-import shopService, { ShopService } from "../services/shop"
 import { createShopFormSchema } from "../moulds/ShopForm"
-import { ControllerAPI } from "../types/controller"
 import cc from "../utils/cc"
-import escapeHtmlInObject from "../utils/escape-html-in-object"
 import bodyParser from "body-parser"
+import escapeHtmlInObject from "../utils/escape-html-in-object"
 
 interface ShopQuery {
 	pageIndex: number

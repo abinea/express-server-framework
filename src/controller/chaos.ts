@@ -1,6 +1,7 @@
 import type { Handler } from "../types/controller"
 import { Router } from "express"
 import cc from "../utils/cc"
+
 const ASYNC_MS = 800
 
 class ChaosController {

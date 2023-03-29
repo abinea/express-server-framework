@@ -1,24 +1,21 @@
+import type DB from "../types/model"
 import fs from "node:fs"
 import path from "node:path"
-import process from "node:process"
 import { fileURLToPath } from "node:url"
 import Sequelize from "sequelize"
-import configs from "./config.json"
-import DB from "../types/model"
+import config from "../config"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const basename = path.basename(__filename)
-const env = process.env.NODE_ENV || "development"
-// @ts-ignore
-const config = configs[env]
-const sequelize = config.url
-	? new Sequelize.Sequelize(config.url, config)
+const dbConfig = config.db as any
+const sequelize = dbConfig.url
+	? new Sequelize.Sequelize(dbConfig.url, config)
 	: new Sequelize.Sequelize(
-			config.database,
-			config.username,
-			config.password,
-			config
+			dbConfig.database,
+			dbConfig.username,
+			dbConfig.password,
+			dbConfig
 	  )
 
 async function initModels() {

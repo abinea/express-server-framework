@@ -1,8 +1,9 @@
 import session from "express-session"
 import sessionSequelize from "connect-session-sequelize"
 import db from "../models"
+import config from "../config"
 
-export default function sessionMiddleware(secret: string) {
+export default function sessionMiddleware() {
 	const SequelizeStore = sessionSequelize(session.Store)
 
 	const store = new SequelizeStore({
@@ -11,8 +12,8 @@ export default function sessionMiddleware(secret: string) {
 	})
 
 	return session({
-		secret,
-		cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
+		secret: config.sessionCookieSecret,
+		cookie: { maxAge: config.sessionCookieMaxAge },
 		store,
 		resave: false,
 		proxy: true,

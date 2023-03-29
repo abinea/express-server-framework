@@ -1,6 +1,6 @@
+import type { NextFunction, Request, Response } from "express"
 import { normalize } from "node:path"
 import { parse, format } from "node:url"
-import type { NextFunction, Request, Response } from "express"
 
 export default function urlnormalizeMiddleware() {
 	return (req: Request, res: Response, next: NextFunction) => {

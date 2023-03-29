@@ -1,20 +1,19 @@
+import type { Handler } from "../types/controller"
 import { parse } from "url"
-import { Handler } from "../types/controller"
+import config from "../config"
 
-export default function loginMiddleware(
-	homepagePath = "/",
-	loginPath = "/login.html",
-	whiteList: { [key: string]: string[] } = {
-		"/500.html": ["get"],
-		"/api/health": ["get"],
-		"/api/login": ["post"],
-		"/api/login/github": ["get"],
-		"/api/login/github/callback": ["get"],
-		"/api/csrf/script": ["get"],
+const homepagePath = "/"
+const loginPath = "/login.html"
+
+const whiteList: { [key: string]: string[] } = Object.assign(
+	{},
+	config.loginWhiteList,
+	{
+		[loginPath]: ["get"],
 	}
-): Handler {
-	whiteList[loginPath] = ["get"]
+)
 
+export default function loginMiddleware(): Handler {
 	return (req, res, next) => {
 		const pathname = parse(req.url).pathname as string
 

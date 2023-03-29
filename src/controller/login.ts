@@ -1,10 +1,12 @@
 import type { Handler } from "../types/controller"
-
 import { Router } from "express"
 import { passport } from "../middlewares/auth"
+import config from "../config"
+
+const homepagePath = config.homepagePath
+const loginPath = config.loginPath
 
 class LoginController {
-	constructor(public homepagePath: string, public loginPath: string) {}
 	async init() {
 		const router = Router()
 		router.post("/", this.post)
@@ -15,7 +17,7 @@ class LoginController {
 		router.get(
 			"/github/callback",
 			passport.authenticate("github", {
-				failureRedirect: this.loginPath,
+				failureRedirect: loginPath,
 			}),
 			this.getGithubCallback
 		)
@@ -25,17 +27,17 @@ class LoginController {
 	post: Handler = (req, res) => {
 		// @ts-ignore
 		req.session.logined = true
-		res.redirect(this.homepagePath)
+		res.redirect(homepagePath)
 	}
 
 	getGithubCallback: Handler = (req, res) => {
 		// @ts-ignore
 		req.session.logined = true
-		res.redirect(this.homepagePath)
+		res.redirect(homepagePath)
 	}
 }
 
-export default async (homepagePath = "/", loginPath = "/login.html") => {
-	const c = new LoginController(homepagePath, loginPath)
+export default async () => {
+	const c = new LoginController()
 	return await c.init()
 }

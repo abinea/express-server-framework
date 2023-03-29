@@ -7,8 +7,9 @@ import authMiddleware from "./auth"
 import bodyParser from "body-parser"
 import csurf from "csurf"
 import helmet from "helmet"
+import config from "../config"
 
-const secret = "d41d8cd98f00b204e9800998ecf8427ea378d269"
+// const secret = "d41d8cd98f00b204e9800998ecf8427ea378d269"
 
 export default async function initMiddlewares() {
 	const router = Router()
@@ -29,8 +30,8 @@ export default async function initMiddlewares() {
 	// 修正 URL，如 /api//login => /api/login
 	router.use(urlnormalizeMiddleware())
 	// 会话管理
-	router.use(cookieParser())
-	router.use(sessionMiddleware(secret))
+	router.use(cookieParser(config.sessionCookieSecret))
+	router.use(sessionMiddleware())
 	// 权限限制
 	router.use(loginMiddleware())
 	// 身份验证 OAuth

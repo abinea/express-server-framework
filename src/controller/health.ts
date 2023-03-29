@@ -1,5 +1,5 @@
+import type { Handler } from "../types/controller"
 import { Router } from "express"
-import { Handler } from "../types/controller"
 
 class HealthController {
 	async init() {
