@@ -3,7 +3,7 @@ export default (
 	sequelize: Sequelize.Sequelize,
 	DataTypes: typeof Sequelize.DataTypes
 ) => {
-	class Shop extends Model {
+	class scheduleLock extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -13,17 +13,16 @@ export default (
 			// define association here
 		}
 	}
-	Shop.init(
-		// 实际返回的数据
+	scheduleLock.init(
 		{
 			name: DataTypes.STRING,
-			hacked: DataTypes.BOOLEAN,
+			counter: DataTypes.INTEGER,
 		},
 		{
 			sequelize,
-			modelName: "Shop",
-			tableName: "shop",
+			modelName: "ScheduleLock",
+			tableName: "schedule_lock",
 		}
 	)
-	return Shop
+	return scheduleLock
 }

@@ -17,14 +17,26 @@ module.exports = {
 				name: "良品铺子",
 				created_at: new Date(),
 				updated_at: new Date(),
+				hacked: false,
 			},
-			{ name: "来伊份", created_at: new Date(), updated_at: new Date() },
+			{
+				name: "来伊份",
+				created_at: new Date(),
+				updated_at: new Date(),
+				hacked: false,
+			},
 			{
 				name: "三只松鼠",
 				created_at: new Date(),
 				updated_at: new Date(),
+				hacked: false,
 			},
-			{ name: "百草味", created_at: new Date(), updated_at: new Date() },
+			{
+				name: "百草味",
+				created_at: new Date(),
+				updated_at: new Date(),
+				hacked: true,
+			},
 		])
 	},
 

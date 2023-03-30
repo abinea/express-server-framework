@@ -1,6 +1,7 @@
 import type { ENV } from "../types"
 import merge from "lodash.merge"
 import logger, { logging } from "../utils/logger"
+import type { Logger } from "bunyan"
 
 interface Config {
 	default: {
@@ -28,6 +29,16 @@ interface Config {
 				underscored: boolean
 			}
 			migrationStorageTableName: string
+		}
+		mailerOptions: {
+			host: string
+			port: number
+			secure: boolean
+			logger: Logger
+			auth: {
+				user: string
+				pass: string
+			}
 		}
 	}
 

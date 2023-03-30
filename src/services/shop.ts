@@ -8,17 +8,17 @@ import type {
 	RemoveArgs,
 	RemoveResult,
 	ServiceAPI,
-} from "../types/service"
-import type { ShopModel } from "../types/model"
+	ShopModel,
+} from "../types"
 import db from "../models"
-
-export class ShopService {
+class ShopService {
 	async init() {}
 
 	find: ServiceAPI<FindArgs, FindResult<ShopModel>> = async ({
 		id,
 		pageIndex = 0,
 		pageSize = 10,
+		where,
 		logging,
 	}) => {
 		if (id) {
@@ -27,6 +27,7 @@ export class ShopService {
 		return await db.Shop.findAll({
 			offset: pageIndex * pageSize,
 			limit: pageSize,
+			where,
 			logging,
 		})
 	}

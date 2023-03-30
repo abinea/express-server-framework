@@ -31,6 +31,16 @@ const config = {
 			},
 			migrationStorageTableName: "sequelize_meta",
 		},
+
+		mailerOptions: {
+			host: "smtp.exmail.qq.com",
+			port: 465,
+			secure: true,
+			auth: {
+				user: process.env.MAILER_USER,
+				pass: process.env.MAILER_PASS,
+			},
+		},
 	},
 
 	// 本地配置

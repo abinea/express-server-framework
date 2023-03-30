@@ -1,11 +1,9 @@
-import type { ControllerAPI } from "../types/controller"
-import type { ShopService } from "../services/shop"
-import shopService from "../services/shop"
+import type { ControllerAPI, UnPromisify } from "../types"
 import { Router } from "express"
-import { createShopFormSchema } from "../moulds/ShopForm"
-import cc from "../utils/cc"
 import bodyParser from "body-parser"
-import escapeHtmlInObject from "../utils/escape-html-in-object"
+import { createShopFormSchema } from "../moulds/ShopForm"
+import { shopService } from "../services"
+import { cc, escapeHtmlInObject } from "../utils"
 
 interface ShopQuery {
 	pageIndex: number
@@ -13,7 +11,7 @@ interface ShopQuery {
 }
 
 class ShopController {
-	shopService = {} as ShopService
+	shopService = {} as UnPromisify<typeof shopService>
 
 	async init(): Promise<Router> {
 		this.shopService = await shopService()

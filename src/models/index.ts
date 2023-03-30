@@ -2,7 +2,7 @@ import type DB from "../types/model"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import Sequelize from "sequelize"
+import Sequelize, { Model } from "sequelize"
 import config from "../config"
 
 const __filename = fileURLToPath(import.meta.url)

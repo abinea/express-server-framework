@@ -7,6 +7,7 @@ import process from "node:process"
 import express from "express"
 import initMiddlewares from "./middlewares"
 import initControllers from "./controller"
+import initSchedules from "./schedules"
 import logger from "./utils/logger"
 
 const server: Application = express()
@@ -24,6 +25,8 @@ async function bootstrap() {
 	server.use(await initControllers())
 	// 错误处理
 	server.use(errorHandler)
+	// 注册定时任务
+	await initSchedules()
 
 	await promisify(server.listen.bind(server, port))()
 	logger.info(`> start server on port ${port}`)
